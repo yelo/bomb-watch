@@ -16,7 +16,7 @@ class GbClient {
   }
 
   Future<GbVideos> fetchVideos(String apiKey, int offset, int limit, int showId) async {
-    final response = await http.get('https://www.giantbomb.com/api/videos/?api_key=269ef98cdcae8532b1e58ebcad23edda54deedfb&offset=0&sort=publish_date%3Adesc&field_list=saved_time,name,deck,hd_url,high_url,low_url,guid,publish_date,image,user,length_seconds,url&format=JSON&limit=3&filter=video_show:72');
+    final response = await http.get('https://www.giantbomb.com/api/videos/?api_key=269ef98cdcae8532b1e58ebcad23edda54deedfb&offset=0&sort=publish_date%3Adesc&field_list=saved_time,name,deck,hd_url,high_url,low_url,guid,publish_date,image,user,length_seconds,url&format=JSON&limit=3&filter=video_show:${showId}');
     if (response.statusCode == 200) {
       return GbVideos.fromJson(json.decode(response.body));
     } else {

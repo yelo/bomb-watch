@@ -1,6 +1,7 @@
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
-import 'package:bomb_watch/http/gb_client.dart';
-import 'package:bomb_watch/main.dart';
+import 'package:bomb_watch/data/api_responses/gb_video.dart';
+import 'package:bomb_watch/data/api_responses/gb_videos.dart';
+import 'package:bomb_watch/services/gb_client.dart';
 import 'package:bomb_watch/ui/main/detail.dart';
 import 'package:bomb_watch/ui/main/master.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,8 +14,6 @@ class MasterDetailContainer extends StatefulWidget {
 }
 
 class _MasterDetailContainerState extends State<MasterDetailContainer> {
-  // Track the currently selected item here. Only used for
-  // tablet layouts.
   Show _selectedShow;
 
   GbClient gbClient = GetIt.instance<GbClient>();
@@ -27,34 +26,31 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
   }
 
   Widget _buildMobileLayout() {
-    return FutureBuilder<GbShows>(
-            future: futureShows,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return MasterScreen(
-                    // Since we're on mobile, just push a new route for the
-                    // item details.
-                    itemSelectedCallback: (show) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => DetailScreen(show: show),
-                          ));
-                    },
-                    shows: snapshot.data.results);
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
+    return Center(
+      child: FutureBuilder<GbShows>(
+        future: futureShows,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return MasterScreen(
+                itemSelectedCallback: (show) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => DetailScreen(show: show, futureVideos: gbClient.fetchVideos("apiKey", 0, 0, show.id),),
+                      ));
+                },
+                shows: snapshot.data.results);
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
 
-              // By default, show a loading spinner.
-              return CircularProgressIndicator();
-            },
-          );
+          return CircularProgressIndicator();
+        },
+      ),
+    ) ;
   }
 
   Widget _buildTabletLayout() {
-    // For tablets, return a layout that has item listing on the left
-    // and item details on the right.
     return Row(
       children: <Widget>[
         Flexible(
@@ -64,9 +60,6 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return MasterScreen(
-                      // Instead of pushing a new route here, we update
-                      // the currently selected item, which is a part of
-                      // our state now.
                       itemSelectedCallback: (show) {
                         setState(() {
                           _selectedShow = show;
@@ -77,14 +70,12 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
                   } else if (snapshot.hasError) {
                     return Text("${snapshot.error}");
                   }
-                  // By default, show a loading spinner.
+
                   return CircularProgressIndicator();
                 })),
         Flexible(
           flex: 3,
           child: DetailScreen(
-            // The item details just blindly accepts whichever
-            // item we throw in its way, just like before.
             show: _selectedShow,
           ),
         ),

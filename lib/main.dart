@@ -1,4 +1,5 @@
-import 'package:bomb_watch/http/gb_client.dart';
+import 'package:bomb_watch/services/gb_client.dart';
+import 'package:bomb_watch/services/simple_persistent_storage.dart';
 import 'package:bomb_watch/ui/auth/authentication.dart';
 import 'package:bomb_watch/ui/main/container.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ final getIt = GetIt.instance;
 
 void setupDependencyInjection() {
   getIt.registerSingleton<GbClient>(GbClient());
+  getIt.registerSingleton<SimplePersistentStorage>(SimplePersistentStorage());
 }
 
 void main() {

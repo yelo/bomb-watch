@@ -26,14 +26,11 @@ class MasterScreen extends StatelessWidget {
         ),
         body: Center(
           child: ListView(
-            children: shows.map((show) {
+            children:
+            shows.map((show) {
               return ListTile(
                 title: Text(show.title),
                 onTap: () => itemSelectedCallback(show),
-
-                // Use the built-in "selected" argument on the ListTile.
-                // It's a simple boolean denoting if the item is currently
-                // selected or not.
                 selected: selectedShow == show,
               );
             }).toList(),
