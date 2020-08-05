@@ -1,6 +1,4 @@
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
-import 'package:bomb_watch/data/api_responses/gb_video.dart';
-import 'package:bomb_watch/data/api_responses/gb_videos.dart';
 import 'package:bomb_watch/services/gb_client.dart';
 import 'package:bomb_watch/ui/main/detail.dart';
 import 'package:bomb_watch/ui/main/master.dart';
@@ -26,28 +24,30 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
   }
 
   Widget _buildMobileLayout() {
-    return Center(
-      child: FutureBuilder<GbShows>(
-        future: futureShows,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return MasterScreen(
-                itemSelectedCallback: (show) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => DetailScreen(show: show, futureVideos: gbClient.fetchVideos("apiKey", 0, 0, show.id),),
-                      ));
-                },
-                shows: snapshot.data.results);
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
+    return FutureBuilder<GbShows>(
+      future: futureShows,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return MasterScreen(
+              itemSelectedCallback: (show) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => DetailScreen(
+                        show: show,
+                        futureVideos:
+                            gbClient.fetchVideos("apiKey", 0, 10, show.id),
+                      ),
+                    ));
+              },
+              shows: snapshot.data.results);
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
 
-          return CircularProgressIndicator();
-        },
-      ),
-    ) ;
+        return CircularProgressIndicator();
+      },
+    );
   }
 
   Widget _buildTabletLayout() {

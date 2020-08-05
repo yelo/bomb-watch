@@ -1,6 +1,6 @@
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
 import 'package:bomb_watch/data/api_responses/gb_videos.dart';
-import 'package:bomb_watch/services/gb_client.dart';
+import 'package:cache_image/cache_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -27,34 +27,32 @@ class DetailScreen extends StatelessWidget {
     );*/
 
     return Center(
-      child:
-      FutureBuilder<GbVideos>(
-          future: futureVideos,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Scaffold(
-                appBar: AppBar(
-                  title: Text(show.title),
-                ),
-                body: GridView.count(
-                  crossAxisCount: 2,
-                  children: snapshot.data.results.map((video) {
-                    return Center(
-                      child: Text(
-                        '${video.name}',
-                        style: textTheme.headline5,
-                      ),
-                    );
-                  }).toList(),
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
+        child: FutureBuilder<GbVideos>(
+            future: futureVideos,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Scaffold(
+                  appBar: AppBar(
+                    title: Text(show.title),
+                  ),
+                  body: GridView.count(
+                    crossAxisCount: 1,
+                    children: snapshot.data.results.map((video) {
+                      return Center(
+                        child: FadeInImage(
+                          fit: BoxFit.cover,
+                          image: CacheImage(video.image.mediumUrl),
+                            placeholder: AssetImage("assets/placeholder"),
+                        )
+                      );
+                    }).toList(),
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
 
-            return CircularProgressIndicator();
-          }
-      )
-    );
+              return CircularProgressIndicator();
+            }));
   }
 }

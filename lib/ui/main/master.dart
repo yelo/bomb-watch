@@ -15,27 +15,28 @@ class MasterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fetch Data Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Welcome to the Bomb Watch'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.settings,
+            ),
+            onPressed: () {
+              // do something
+            },
+          )
+        ],
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Fetch Data Example'),
-        ),
-        body: Center(
-          child: ListView(
-            children:
-            shows.map((show) {
-              return ListTile(
-                title: Text(show.title),
-                onTap: () => itemSelectedCallback(show),
-                selected: selectedShow == show,
-              );
-            }).toList(),
-          ),
-        ),
+      body: ListView(
+        children: shows.map((show) {
+          return ListTile(
+            title: Text(show.title),
+            onTap: () => itemSelectedCallback(show),
+            selected: selectedShow == show,
+          );
+        }).toList(),
       ),
     );
   }

@@ -12,5 +12,4 @@ class SimplePersistentStorage {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return await preferences.getString(API_PREFERENCE);
   }
-
 }

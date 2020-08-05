@@ -26,6 +26,7 @@ dependencies:
   get_it: ^4.0.4
   http: ^0.12.2
   shared_preferences: ^0.5.8
+  cache_image: ^1.0.5
 
 
   # The following adds the Cupertino Icons font to your application.
