@@ -20,33 +20,36 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
   @override
   void initState() {
     super.initState();
-    futureShows = gbClient.fetchShows("apiKey");
+    futureShows = gbClient.fetchShows();
   }
 
   Widget _buildMobileLayout() {
-    return FutureBuilder<GbShows>(
-      future: futureShows,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return MasterScreen(
-              itemSelectedCallback: (show) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => DetailScreen(
-                        show: show,
-                        futureVideos:
-                            gbClient.fetchVideos("apiKey", 0, 10, show.id),
-                      ),
-                    ));
-              },
-              shows: snapshot.data.results);
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
+    return Scaffold(
+      body: Center(
+        child: FutureBuilder<GbShows>(
+          future: futureShows,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return MasterScreen(
+                  itemSelectedCallback: (show) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => DetailScreen(
+                            show: show,
+                            futureVideos: gbClient.fetchVideos(0, 10, show.id),
+                          ),
+                        ));
+                  },
+                  shows: snapshot.data.results);
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
 
-        return CircularProgressIndicator();
-      },
+            return CircularProgressIndicator();
+          },
+        ),
+      )
     );
   }
 

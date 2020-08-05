@@ -1,4 +1,5 @@
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
+import 'package:bomb_watch/ui/settings/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class MasterScreen extends StatelessWidget {
               Icons.settings,
             ),
             onPressed: () {
-              // do something
+              Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsScreen()));
             },
           )
         ],
