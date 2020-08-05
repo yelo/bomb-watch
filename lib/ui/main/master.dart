@@ -31,14 +31,25 @@ class MasterScreen extends StatelessWidget {
         ],
       ),
       body: ListView(
-        children: shows.map((show) {
-          return ListTile(
-            title: Text(show.title),
-            onTap: () => itemSelectedCallback(show),
-            selected: selectedShow == show,
-          );
-        }).toList(),
-      ),
-    );
+        children: _getTiles(shows)),
+      );
+  }
+
+  // IMPLEMENT: Main, Favorites, Rest https://flutter.dev/docs/cookbook/lists/mixed-list
+  _getTiles(List<Show> shows) {
+    List<Widget> tiles = new List<Widget>();
+    tiles.add(ListTile(
+      title: const Text('Latest videos'),
+    ));
+    tiles.add(Divider(height: 5.0));
+    shows.forEach((show) {
+      tiles.add(ListTile(
+        title: Text(show.title),
+        onTap: () => itemSelectedCallback(show),
+        selected: selectedShow == show));
+      tiles.add(Divider(height: 5.0));
+    });
+
+    return tiles;
   }
 }

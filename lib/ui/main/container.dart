@@ -37,7 +37,7 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
                         MaterialPageRoute(
                           builder: (_) => DetailScreen(
                             show: show,
-                            futureVideos: gbClient.fetchVideos(0, 10, show.id),
+                            futureVideos: gbClient.fetchVideos(0, 10, show?.id ?? 0),
                           ),
                         ));
                   },
