@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Bomb Watch',
-      theme: ThemeData(primarySwatch: Colors.deepOrange),
+      theme: ThemeData(primarySwatch: Colors.red),
       initialRoute: '/',
       onGenerateRoute: (RouteSettings settings) {
         var routes = <String, WidgetBuilder>{

@@ -31,29 +31,56 @@ class MasterScreen extends StatelessWidget {
           )
         ],
       ),
-      body: ListView(
-        children: _getTiles(shows)),
+      body: ListView(children: _getTiles(shows)),
     );
   }
 
-  // IMPLEMENT: Main, Favorites, Rest https://flutter.dev/docs/cookbook/lists/mixed-list
   _getTiles(List<Show> shows) {
-    Show staticLatestShow = new Show(deck: '', id: 0, title: 'Latest videos', image: null);
+    var favs = shows.where((show) => show.favorite);
+    var rest = shows.where((show) => !show.favorite);
+
+    Show staticLatestShow =
+        new Show(deck: '', id: 0, title: 'Latest videos', image: null);
     List<Widget> tiles = new List<Widget>();
+
     tiles.add(ListTile(
       title: const Text('Latest videos'),
       onTap: () => showSelectedCallback(staticLatestShow),
     ));
+
+    if (favs.length > 0) {
+      tiles.add(Divider(height: 5.0));
+      tiles.add(getHeadingItem('Favorites'));
+      tiles.add(Divider(height: 5.0));
+      favs.forEach((show) {
+        tiles.add(getListShowItem(show));
+        tiles.add(Divider(height: 5.0));
+      });
+    }
+
+    tiles.add(getHeadingItem('Shows'));
     tiles.add(Divider(height: 5.0));
-    shows.forEach((show) {
-      tiles.add(ListTile(
-        title: Text(show.title),
-        trailing: Icon(Icons.local_dining, color: show.favorite ? Colors.green : Colors.red),
-        onLongPress: () => toggleShowFavoriteCallback(show),
-        onTap: () => showSelectedCallback(show),
-        selected: selectedShow?.id == show?.id));
+
+    rest.forEach((show) {
+      tiles.add(getListShowItem(show));
       tiles.add(Divider(height: 5.0));
     });
+
     return tiles;
+  }
+
+  ListTile getListShowItem(Show show) {
+    return ListTile(
+        title: Text(show.title),
+        trailing: IconButton(
+            icon: Icon(show.favorite ? Icons.favorite : Icons.favorite_border,
+                color: Colors.red),
+            onPressed: () => toggleShowFavoriteCallback(show)),
+        onTap: () => showSelectedCallback(show),
+        selected: selectedShow?.id == show?.id);
+  }
+
+  getHeadingItem(String title) {
+    return ListTile(enabled: false, title: Text('${title}', style: TextStyle(fontSize: 28, color: Colors.red)));
   }
 }

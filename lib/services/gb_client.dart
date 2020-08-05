@@ -17,6 +17,8 @@ class GbClient {
     this.apiKey = null;
   }
 
+  // TODO: Fetch live. Doesn't seem to work at the moment.
+
   Future<GbAccessToken> fetchApiKey(String regCode) async {
     final response = await http.get(
         'https://www.giantbomb.com/app/bombwatch/get-result?regCode=${regCode}&format=json');
