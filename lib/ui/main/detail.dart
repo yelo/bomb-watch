@@ -1,7 +1,6 @@
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
 import 'package:bomb_watch/data/api_responses/gb_videos.dart';
-import 'package:bomb_watch/ui/main/video.dart';
-import 'package:cache_image/cache_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,31 +12,12 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /*final TextTheme textTheme = Theme.of(context).textTheme;
-    final Widget content = Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          show?.title ?? 'Nutto selected',
-          style: textTheme.subtitle1,
-        ),
-        Text(
-          show?.deck ?? 'You mus selec',
-          style: textTheme.subtitle2,
-        ),
-      ],
-    );*/
-
-    return Center(
-        child: FutureBuilder<GbVideos>(
+    return Scaffold(
+        appBar: AppBar(title: Text(show.title)),
+        body: FutureBuilder<GbVideos>(
             future: futureVideos,
             builder: (context, snapshot) {
-              return Scaffold(
-                appBar: AppBar(
-                  title: Text(show?.title ?? 'Latest'),
-                ),
-                body: Center(child: _getBody(context, snapshot)),
-              );
+              return _getBody(context, snapshot);
             }));
   }
 
@@ -45,15 +25,17 @@ class DetailScreen extends StatelessWidget {
     if (snapshot.hasData) {
       return GridView.count(
         crossAxisCount: 1,
+        padding: EdgeInsets.all(10),
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
         children: snapshot.data.results.map((video) {
           return InkWell(
-            child: Container(
-              child: Center(
-                  child: FadeInImage(
-                fit: BoxFit.cover,
-                image: CacheImage(video.image.mediumUrl),
-                placeholder: AssetImage("assets/placeholder"),
-              )),
+            child: CachedNetworkImage(
+              fit: BoxFit.cover,
+              imageUrl: video.image.screenUrl,
+              progressIndicatorBuilder: (context, url, progress) => Center(
+                  child: CircularProgressIndicator(value: progress.progress)),
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
             onTap: () => _navigateToVideo(context, video.guid),
           );
@@ -63,7 +45,7 @@ class DetailScreen extends StatelessWidget {
       return Text("${snapshot.error}");
     }
 
-    return CircularProgressIndicator();
+    return Center(child: CircularProgressIndicator());
   }
 
   _navigateToVideo(BuildContext context, String guid) {

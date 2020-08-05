@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:neeko/neeko.dart';
-import 'package:video_player/video_player.dart';
 
 class VideoScreen extends StatefulWidget {
   String guid;
@@ -47,7 +46,6 @@ class _VideoScreenState extends State<VideoScreen> {
 
   @override
   void dispose() {
-    // _videoControllerWrapper.dispose();
     SystemChrome.restoreSystemUIOverlays();
     super.dispose();
   }
@@ -70,13 +68,18 @@ class _VideoScreenState extends State<VideoScreen> {
   }
 
   _getBody(AsyncSnapshot<GbVideo> snapshot) {
-    if (snapshot.hasData && hasLoaded) {
+    if (snapshot.hasData) {
       Video video = snapshot.data.results;
       return Column(children: <Widget>[
-        NeekoPlayerWidget(
-          videoControllerWrapper: _videoControllerWrapper,
-          playerOptions: NeekoPlayerOptions(autoPlay: false),
-        ),
+        AspectRatio(
+            aspectRatio: 2,
+            child: Stack(children: [
+              Center(child: CircularProgressIndicator()),
+              NeekoPlayerWidget(
+                videoControllerWrapper: _videoControllerWrapper,
+                playerOptions: NeekoPlayerOptions(autoPlay: false),
+              ),
+            ])),
         Container(
             padding: EdgeInsets.all(10),
             child: Text(
@@ -87,7 +90,5 @@ class _VideoScreenState extends State<VideoScreen> {
     } else if (snapshot.hasError) {
       return Text("${snapshot.error}");
     }
-
-    return Center(child: CircularProgressIndicator());
   }
 }

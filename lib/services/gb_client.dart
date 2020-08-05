@@ -38,7 +38,8 @@ class GbClient {
   }
 
   Future<GbVideos> fetchVideos(int offset, int limit, int showId) async {
-    var url = 'https://www.giantbomb.com/api/videos/?api_key=${this.apiKey}&offset=${offset}&sort=publish_date%3Adesc&field_list=saved_time,name,deck,hd_url,high_url,low_url,guid,publish_date,image,user,length_seconds,url&format=JSON&limit=${limit}';
+    // var url = 'https://www.giantbomb.com/api/videos/?api_key=${this.apiKey}&offset=${offset}&sort=publish_date%3Adesc&field_list=saved_time,name,deck,hd_url,high_url,low_url,guid,publish_date,image,user,length_seconds,url&format=JSON&limit=${limit}';
+    var url = 'https://www.giantbomb.com/api/videos/?api_key=${this.apiKey}&sort=publish_date%3Adesc&field_list=saved_time,name,deck,hd_url,high_url,low_url,guid,publish_date,image,user,length_seconds,url&format=JSON';
     if (showId != 0) url = '${url}&filter=video_show:${showId}';
     final response = await http.get(url);
     if (response.statusCode == 200) {

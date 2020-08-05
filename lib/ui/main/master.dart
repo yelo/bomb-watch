@@ -1,16 +1,17 @@
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
-import 'package:bomb_watch/ui/settings/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MasterScreen extends StatelessWidget {
   MasterScreen({
-    @required this.itemSelectedCallback,
+    @required this.showSelectedCallback,
+    @required this.toggleShowFavoriteCallback,
     this.shows,
     this.selectedShow,
   });
 
-  final ValueChanged<Show> itemSelectedCallback;
+  final ValueChanged<Show> showSelectedCallback;
+  final ValueChanged<Show> toggleShowFavoriteCallback;
   final Show selectedShow;
   final List<Show> shows;
 
@@ -25,14 +26,14 @@ class MasterScreen extends StatelessWidget {
               Icons.settings,
             ),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsScreen()));
+              Navigator.pushNamed(context, '/settings');
             },
           )
         ],
       ),
       body: ListView(
         children: _getTiles(shows)),
-      );
+    );
   }
 
   // IMPLEMENT: Main, Favorites, Rest https://flutter.dev/docs/cookbook/lists/mixed-list
@@ -41,17 +42,18 @@ class MasterScreen extends StatelessWidget {
     List<Widget> tiles = new List<Widget>();
     tiles.add(ListTile(
       title: const Text('Latest videos'),
-      onTap: () => itemSelectedCallback(staticLatestShow),
+      onTap: () => showSelectedCallback(staticLatestShow),
     ));
     tiles.add(Divider(height: 5.0));
     shows.forEach((show) {
       tiles.add(ListTile(
         title: Text(show.title),
-        onTap: () => itemSelectedCallback(show),
-        selected: selectedShow == show));
+        trailing: Icon(Icons.local_dining, color: show.favorite ? Colors.green : Colors.red),
+        onLongPress: () => toggleShowFavoriteCallback(show),
+        onTap: () => showSelectedCallback(show),
+        selected: selectedShow?.id == show?.id));
       tiles.add(Divider(height: 5.0));
     });
-
     return tiles;
   }
 }

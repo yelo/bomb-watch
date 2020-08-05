@@ -1,5 +1,6 @@
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
 import 'package:bomb_watch/services/gb_client.dart';
+import 'package:bomb_watch/services/simple_persistent_storage.dart';
 import 'package:bomb_watch/ui/main/detail.dart';
 import 'package:bomb_watch/ui/main/master.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,12 +16,22 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
   Show _selectedShow;
 
   GbClient gbClient = GetIt.instance<GbClient>();
+  SimplePersistentStorage simpleStorage =
+      GetIt.instance<SimplePersistentStorage>();
   Future<GbShows> futureShows;
 
   @override
   void initState() {
     super.initState();
     futureShows = gbClient.fetchShows();
+    futureShows.then((shows) => {
+          simpleStorage.getFavoriteShowIds().then((ids) => {
+                shows.results.forEach((show) {
+                  var intIds = ids.map((e) => int.parse(e)).toList();
+                  if (intIds.contains(show.id)) show.favorite = true;
+                })
+              })
+        });
   }
 
   Widget _buildMobileLayout() {
@@ -31,7 +42,8 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return MasterScreen(
-                itemSelectedCallback: (show) {
+                toggleShowFavoriteCallback: (show) => _toggleShowAsFavorite(show),
+                showSelectedCallback: (show) {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -47,7 +59,7 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
             return Text("${snapshot.error}");
           }
 
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         },
       ),
     ));
@@ -63,7 +75,8 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return MasterScreen(
-                      itemSelectedCallback: (show) {
+                      toggleShowFavoriteCallback: (show) => _toggleShowAsFavorite,
+                      showSelectedCallback: (show) {
                         setState(() {
                           _selectedShow = show;
                         });
@@ -79,7 +92,8 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
         Flexible(
           flex: 3,
           child: DetailScreen(
-            show: _selectedShow,
+            show: _selectedShow ?? new Show(
+                deck: null, id: 0, title: 'Latest videos', image: null),
           ),
         ),
       ],
@@ -96,5 +110,13 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
     }
 
     return _buildTabletLayout();
+  }
+
+  _toggleShowAsFavorite(Show show) {
+    simpleStorage.toggleShowAsFavorite(show.id);
+    show.favorite = !show.favorite;
+    setState(() {
+      // just update state.
+    });
   }
 }
