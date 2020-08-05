@@ -21,11 +21,8 @@ class _VideoScreenState extends State<VideoScreen> {
 
   bool hasLoaded = false;
 
-  Future<GbVideo> futureVideo;
   GbClient _gbClient = GetIt.instance<GbClient>();
-
-  // VideoPlayerController _videoPlayerController;
-
+  Future<GbVideo> futureVideo;
   VideoControllerWrapper _videoControllerWrapper;
 
   _VideoScreenState(this.guid);

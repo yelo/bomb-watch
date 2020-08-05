@@ -1,8 +1,9 @@
 import 'package:bomb_watch/services/gb_client.dart';
 import 'package:bomb_watch/services/simple_persistent_storage.dart';
-import 'package:bomb_watch/ui/main/container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 
 class AuthenticationScreen extends StatefulWidget {
@@ -17,49 +18,24 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
   void fetchAndSetApiKey(String regCode) async {
     _gbClient.fetchApiKey(regCode).then((token) async {
-      if (token.regToken == null) {
-        await showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("ERROR ERROR"),
-                content: Text(
-                    "We were unable to authenticate you, are you sure you got the code right?"),
-                actions: <Widget>[
-                  FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Close"),
-                  )
-                ],
-              );
-            });
-        return;
-      }
-      await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Authenticade"),
-              content: Text("You are now authenticated!"),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    _storage.saveApiKey(token.regToken, token.expiration);
-                    _gbClient.setKey(token.regToken);
-                    Navigator.pop(context);
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => MasterDetailContainer()));
-                  },
-                  child: const Text("Let's-a go!"),
-                )
-              ],
-            );
-          });
+        showToast(token.regToken != null).whenComplete(() {
+          if (token.regToken != null) {
+            _storage.saveApiKey(token.regToken);
+            _gbClient.setKey(token.regToken);
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                '/main', (Route<dynamic> route) => false);
+          }
+        });
     });
+  }
+
+  Future<bool> showToast(bool success) {
+    return Fluttertoast.showToast(
+      msg: success ? 'Account synced!' : 'Unable to sync acccount',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: success ? Colors.green : Colors.red,
+    );
   }
 
   @override
@@ -76,16 +52,47 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Authenticate'),
-      ),
-      body: Center(
-          child: TextField(
-        controller: _controller,
-        onSubmitted: fetchAndSetApiKey,
-      )),
-    );
+        appBar: AppBar(
+          title: Text('Sync your account'),
+        ),
+        body: Container(
+          padding: const EdgeInsets.all(32),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    authInfoSection,
+                    authInputSection(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ));
   }
+
+  Container authInputSection() {
+    return Container(
+        child: TextField(
+      decoration: new InputDecoration(hintText: "Reg code goes here"),
+      controller: _controller,
+      onSubmitted: fetchAndSetApiKey,
+    ));
+  }
+
+  Widget authInfoSection = Container(
+    padding: const EdgeInsets.all(32),
+    child: Text(
+      'Lake Oeschinen lies at the foot of the Blüemlisalp in the Bernese '
+      'Alps. Situated 1,578 meters above sea level, it is one of the '
+      'larger Alpine Lakes. A gondola ride from Kandersteg, followed by a '
+      'half-hour walk through pastures and pine forest, leads you to the '
+      'lake, which warms to 20 degrees Celsius in the summer. Activities '
+      'enjoyed here include rowing, and riding the summer toboggan run.',
+      softWrap: true,
+    ),
+  );
 }

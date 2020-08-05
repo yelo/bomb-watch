@@ -13,6 +13,10 @@ class GbClient {
     this.apiKey = apiKey;
   }
 
+  void clearKey() {
+    this.apiKey = null;
+  }
+
   Future<GbAccessToken> fetchApiKey(String regCode) async {
     final response = await http.get(
         'https://www.giantbomb.com/app/bombwatch/get-result?regCode=${regCode}&format=json');
@@ -34,8 +38,9 @@ class GbClient {
   }
 
   Future<GbVideos> fetchVideos(int offset, int limit, int showId) async {
-    final response = await http.get(
-        'https://www.giantbomb.com/api/videos/?api_key=${this.apiKey}&offset=${offset}&sort=publish_date%3Adesc&field_list=saved_time,name,deck,hd_url,high_url,low_url,guid,publish_date,image,user,length_seconds,url&format=JSON&limit=${limit}&filter=video_show:${showId}');
+    var url = 'https://www.giantbomb.com/api/videos/?api_key=${this.apiKey}&offset=${offset}&sort=publish_date%3Adesc&field_list=saved_time,name,deck,hd_url,high_url,low_url,guid,publish_date,image,user,length_seconds,url&format=JSON&limit=${limit}';
+    if (showId != 0) url = '${url}&filter=video_show:${showId}';
+    final response = await http.get(url);
     if (response.statusCode == 200) {
       return GbVideos.fromJson(json.decode(response.body));
     } else {

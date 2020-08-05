@@ -37,9 +37,11 @@ class MasterScreen extends StatelessWidget {
 
   // IMPLEMENT: Main, Favorites, Rest https://flutter.dev/docs/cookbook/lists/mixed-list
   _getTiles(List<Show> shows) {
+    Show staticLatestShow = new Show(deck: '', id: 0, title: 'Latest videos', image: null);
     List<Widget> tiles = new List<Widget>();
     tiles.add(ListTile(
       title: const Text('Latest videos'),
+      onTap: () => itemSelectedCallback(staticLatestShow),
     ));
     tiles.add(Divider(height: 5.0));
     shows.forEach((show) {

@@ -67,7 +67,6 @@ class DetailScreen extends StatelessWidget {
   }
 
   _navigateToVideo(BuildContext context, String guid) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (_) => VideoScreen(guid)));
+    Navigator.pushNamed(context, '/video', arguments: guid);
   }
 }

@@ -18,16 +18,14 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     // Try to fetch the API key from the persistent storage
-    storage.fetchApiToken().then((token) {
+    storage.getApiKey().then((token) {
       if (token == null) {
         // If no key, start the auth flow.
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => AuthenticationScreen()));
+        Navigator.pushReplacementNamed(context, '/auth');
       } else {
         // Else, set the key and start the 'main' part of the app.
         _gbClient.setKey(token);
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (_) => MasterDetailContainer()));
+        Navigator.pushReplacementNamed(context, '/main');
       }
     });
   }

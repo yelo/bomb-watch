@@ -1,15 +1,20 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SimplePersistentStorage {
-  static const String API_TOKEN_VALUE_KEY = "API_TOKEN_VALUE_KEY";
+  static const String API_KEY_PREFERENCE = "API_KEY_PREFERENCE";
 
-  void saveApiKey(String apiKey, String expiration) async {
+  void saveApiKey(String apiKey) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    await preferences.setString(API_TOKEN_VALUE_KEY, apiKey);
+    await preferences.setString(API_KEY_PREFERENCE, apiKey);
   }
 
-  Future<String> fetchApiToken() async {
+  Future<String> getApiKey() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return await preferences.getString(API_TOKEN_VALUE_KEY);
+    return await preferences.getString(API_KEY_PREFERENCE);
+  }
+
+  void clearApiToken() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.remove(API_KEY_PREFERENCE);
   }
 }

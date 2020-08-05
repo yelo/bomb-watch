@@ -28,6 +28,8 @@ dependencies:
   shared_preferences: ^0.5.8
   cache_image: ^1.0.5
   neeko: ^0.0.10
+  characters: ^1.0.0
+  fluttertoast: ^7.0.2
 
 
   # The following adds the Cupertino Icons font to your application.

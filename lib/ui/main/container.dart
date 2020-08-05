@@ -25,32 +25,32 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
 
   Widget _buildMobileLayout() {
     return Scaffold(
-      body: Center(
-        child: FutureBuilder<GbShows>(
-          future: futureShows,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return MasterScreen(
-                  itemSelectedCallback: (show) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => DetailScreen(
-                            show: show,
-                            futureVideos: gbClient.fetchVideos(0, 10, show?.id ?? 0),
-                          ),
-                        ));
-                  },
-                  shows: snapshot.data.results);
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
+        body: Center(
+      child: FutureBuilder<GbShows>(
+        future: futureShows,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return MasterScreen(
+                itemSelectedCallback: (show) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => DetailScreen(
+                          show: show,
+                          futureVideos:
+                              gbClient.fetchVideos(0, 10, show?.id ?? 0),
+                        ),
+                      ));
+                },
+                shows: snapshot.data.results);
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
 
-            return CircularProgressIndicator();
-          },
-        ),
-      )
-    );
+          return CircularProgressIndicator();
+        },
+      ),
+    ));
   }
 
   Widget _buildTabletLayout() {
