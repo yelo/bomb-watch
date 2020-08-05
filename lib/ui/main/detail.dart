@@ -1,5 +1,6 @@
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
 import 'package:bomb_watch/data/api_responses/gb_videos.dart';
+import 'package:bomb_watch/ui/main/video.dart';
 import 'package:cache_image/cache_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,26 +33,30 @@ class DetailScreen extends StatelessWidget {
             future: futureVideos,
             builder: (context, snapshot) {
               return Scaffold(
-                  appBar: AppBar(
-                    title: Text(show?.title ?? 'Latest'),
-                  ),
-                  body: Center(
-                    child: _getBody(snapshot)),
-                  );
+                appBar: AppBar(
+                  title: Text(show?.title ?? 'Latest'),
+                ),
+                body: Center(child: _getBody(context, snapshot)),
+              );
             }));
   }
 
-  _getBody(AsyncSnapshot<GbVideos> snapshot) {
+  _getBody(BuildContext context, AsyncSnapshot<GbVideos> snapshot) {
     if (snapshot.hasData) {
       return GridView.count(
         crossAxisCount: 1,
         children: snapshot.data.results.map((video) {
-          return Center(
-              child: FadeInImage(
-            fit: BoxFit.cover,
-            image: CacheImage(video.image.mediumUrl),
-            placeholder: AssetImage("assets/placeholder"),
-          ));
+          return InkWell(
+            child: Container(
+              child: Center(
+                  child: FadeInImage(
+                fit: BoxFit.cover,
+                image: CacheImage(video.image.mediumUrl),
+                placeholder: AssetImage("assets/placeholder"),
+              )),
+            ),
+            onTap: () => _navigateToVideo(context, video.guid),
+          );
         }).toList(),
       );
     } else if (snapshot.hasError) {
@@ -59,5 +64,10 @@ class DetailScreen extends StatelessWidget {
     }
 
     return CircularProgressIndicator();
+  }
+
+  _navigateToVideo(BuildContext context, String guid) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (_) => VideoScreen(guid)));
   }
 }

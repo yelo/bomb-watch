@@ -45,7 +45,7 @@ class GbClient {
 
   Future<GbVideo> fetchVideo(String guid) async {
     final response = await http.get(
-        'https://www.giantbomb.com/api/video/2300-15145/?api_key=${this.apiKey}&format=json');
+        'https://www.giantbomb.com/api/video/${guid}/?api_key=${this.apiKey}&format=json');
     if (response.statusCode == 200) {
       return GbVideo.fromJson(json.decode(response.body));
     } else {
