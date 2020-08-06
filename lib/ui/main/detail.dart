@@ -22,11 +22,13 @@ class DetailScreen extends StatelessWidget {
   }
 
   _getBody(BuildContext context, AsyncSnapshot<GbVideos> snapshot) {
+    var shortestSide = MediaQuery.of(context).size.shortestSide;
+    var useMobileLayout = shortestSide < 600;
     if (snapshot.hasData) {
       return GridView.count(
         primary: false,
         childAspectRatio: 16 / 9,
-        crossAxisCount: 1,
+        crossAxisCount: useMobileLayout ? 1 : 3,
         padding: EdgeInsets.all(10),
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,

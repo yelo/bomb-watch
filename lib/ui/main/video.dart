@@ -1,5 +1,6 @@
 import 'package:bomb_watch/data/api_responses/gb_video.dart';
 import 'package:bomb_watch/services/gb_client.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -56,7 +57,6 @@ class _VideoScreenState extends State<VideoScreen> {
         future: futureVideo,
         builder: (context, snapshot) {
           return Scaffold(
-            backgroundColor: Colors.black12,
             appBar: AppBar(
               title: Text(snapshot.hasData
                   ? snapshot.data.results?.name
@@ -71,21 +71,52 @@ class _VideoScreenState extends State<VideoScreen> {
     if (snapshot.hasData) {
       Video video = snapshot.data.results;
       return Column(children: <Widget>[
-        AspectRatio(
-            aspectRatio: 2,
-            child: Stack(children: [
-              Center(child: CircularProgressIndicator()),
-              NeekoPlayerWidget(
-                videoControllerWrapper: _videoControllerWrapper,
-                playerOptions: NeekoPlayerOptions(autoPlay: false),
-              ),
-            ])),
         Container(
+            child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Stack(children: [
+                      ConstrainedBox(
+                        constraints: const BoxConstraints.expand(),
+                        child: CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          imageUrl: video.image.screenUrl,
+                        ),
+                      ),
+                      Center(child: CircularProgressIndicator()),
+                      NeekoPlayerWidget(
+                        videoControllerWrapper: _videoControllerWrapper,
+                        playerOptions: NeekoPlayerOptions(autoPlay: false),
+                      ),
+                    ])))),
+        Container(
+          color: Colors.black,
+          padding: EdgeInsets.all(10),
+          child: Text(
+            '${video.name}',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        Padding(padding: EdgeInsets.only(bottom: 10)),
+        Container(
+            color: Colors.black,
             padding: EdgeInsets.all(10),
-            child: Text(
-              'Uploaded by: ${video.user} @ ${video.publishDate}',
-              style: TextStyle(color: Colors.pinkAccent),
-            ))
+            child: Container(
+              child: Text(
+                '${video.deck}',
+                style: TextStyle(color: Colors.white),
+              ),
+            )),
+        Padding(padding: EdgeInsets.only(bottom: 10)),
+        Container(
+          color: Colors.black,
+          padding: EdgeInsets.all(10),
+          child: Text(
+            '${video.user} @ ${video.publishDate}',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
       ]);
     } else if (snapshot.hasError) {
       return Text("${snapshot.error}");
