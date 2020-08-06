@@ -1,9 +1,11 @@
 import 'package:bomb_watch/services/gb_client.dart';
 import 'package:bomb_watch/services/simple_persistent_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AuthenticationScreen extends StatefulWidget {
   @override
@@ -11,6 +13,7 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
+  TapGestureRecognizer _tapGestureRecognizer;
   TextEditingController _controller;
   GbClient _gbClient = GetIt.instance<GbClient>();
   SimplePersistentStorage _storage = GetIt.instance<SimplePersistentStorage>();
@@ -37,15 +40,21 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     );
   }
 
+  void _launchGb() {
+    launch('https://www.giantbomb.com/app/bombwatch/');
+  }
+
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    _tapGestureRecognizer = TapGestureRecognizer()..onTap = _launchGb;
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _tapGestureRecognizer.dispose();
     super.dispose();
   }
 
@@ -63,7 +72,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    authInfoSection,
+                    Center(child: Text("💣 BombWatch 📺", style: TextStyle(fontSize: 32, letterSpacing: 3, color: Colors.red, fontWeight: FontWeight.bold))),
+                    authInfoSection(),
                     authInputSection(),
                   ],
                 ),
@@ -82,16 +92,35 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     ));
   }
 
-  Widget authInfoSection = Container(
-    padding: const EdgeInsets.all(32),
-    child: Text(
-      'Lake Oeschinen lies at the foot of the Blüemlisalp in the Bernese '
-      'Alps. Situated 1,578 meters above sea level, it is one of the '
-      'larger Alpine Lakes. A gondola ride from Kandersteg, followed by a '
-      'half-hour walk through pastures and pine forest, leads you to the '
-      'lake, which warms to 20 degrees Celsius in the summer. Activities '
-      'enjoyed here include rowing, and riding the summer toboggan run.',
-      softWrap: true,
-    ),
-  );
+  Widget authInfoSection() {
+    return Container(
+      padding: const EdgeInsets.only(top: 32, bottom: 45),
+      child: new RichText(
+        text: new TextSpan(
+          children: [
+            new TextSpan(
+              text: '''Before you can start to use this app, you have to sync your account. Start by tapping on this ''',
+              style: new TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            new TextSpan(
+                text: 'HYPERLINK',
+                style: new TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.2),
+                recognizer: _tapGestureRecognizer
+            ), new TextSpan(
+              text: ", it will take you to the",
+              style: new TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            new TextSpan(
+              text: " \"Sync with Bombwatch\" ",
+              style: new TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            new TextSpan(
+              text: "page where you will see a code. You have to put down that code in the textfield just here below. After you've done that and cliked next, you should be ready to rock!",
+              style: new TextStyle(color: Colors.black, fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

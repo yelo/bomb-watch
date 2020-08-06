@@ -27,17 +27,25 @@ class MyApp extends StatelessWidget {
       title: 'Bomb Watch',
       theme: ThemeData(primarySwatch: Colors.red),
       initialRoute: '/',
-      onGenerateRoute: (RouteSettings settings) {
+      onGenerateRoute: (settings) {
+        final VideoArgs videoArgs = settings.arguments;
         var routes = <String, WidgetBuilder>{
           '/': (context) => SplashScreen(),
           '/auth': (context) => AuthenticationScreen(),
           '/main': (context) => MasterDetailContainer(),
           '/settings': (context) => SettingsScreen(),
-          '/video': (context) => VideoScreen(settings.arguments),
+          '/video': (context) => VideoScreen(videoArgs.guid, videoArgs.imageProvider),
         };
         WidgetBuilder builder = routes[settings.name];
         return MaterialPageRoute(builder: (context) => builder(context));
       },
     );
   }
+}
+
+class VideoArgs {
+  String guid;
+  ImageProvider imageProvider;
+
+  VideoArgs(this.guid, this.imageProvider);
 }

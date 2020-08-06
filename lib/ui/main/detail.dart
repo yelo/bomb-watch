@@ -1,5 +1,7 @@
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
 import 'package:bomb_watch/data/api_responses/gb_videos.dart';
+import 'package:bomb_watch/main.dart';
+import 'package:bomb_watch/ui/main/video.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,15 +23,22 @@ class DetailScreen extends StatelessWidget {
             }));
   }
 
-  _getBody(BuildContext context, AsyncSnapshot<GbVideos> snapshot) {
+  int _getCrossAxisCount(BuildContext context, orientation) {
     var shortestSide = MediaQuery.of(context).size.shortestSide;
     var useMobileLayout = shortestSide < 600;
+
+    if (useMobileLayout) return orientation == Orientation.portrait ? 1 : 2;
+    return orientation == Orientation.portrait ? 3 : 5;
+  }
+
+  _getBody(BuildContext context, AsyncSnapshot<GbVideos> snapshot) {
+    var orientation = MediaQuery.of(context).orientation;
     if (snapshot.hasData) {
       return GridView.count(
         primary: false,
         childAspectRatio: 16 / 9,
-        crossAxisCount: useMobileLayout ? 1 : 3,
-        padding: EdgeInsets.all(10),
+        crossAxisCount: _getCrossAxisCount(context, orientation),
+        padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
         children: snapshot.data.results.map((video) {
@@ -71,7 +80,7 @@ class DetailScreen extends StatelessWidget {
                             )))
                   ],
                 ),
-                onTap: () => _navigateToVideo(context, video.guid),
+                onTap: () => _navigateToVideo(context, video.guid, video.image.screenUrl),
               ));
         }).toList(),
       );
@@ -82,7 +91,17 @@ class DetailScreen extends StatelessWidget {
     return Center(child: CircularProgressIndicator());
   }
 
-  _navigateToVideo(BuildContext context, String guid) {
-    Navigator.pushNamed(context, '/video', arguments: guid);
+  _navigateToVideo(BuildContext context, String guid, String imageUrl) {
+    final ImageProvider imageProvider = CachedNetworkImageProvider(imageUrl);
+    /*showModalBottomSheet(
+        context: context,
+        builder: (ctx) {
+          return Container(
+            child: VideoScreen(guid, imageProvider),
+          );
+        });*/
+
+
+    Navigator.pushNamed(context, '/video', arguments: VideoArgs(guid, imageProvider));
   }
 }

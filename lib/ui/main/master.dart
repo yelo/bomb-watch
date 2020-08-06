@@ -45,7 +45,7 @@ class MasterScreen extends StatelessWidget {
 
     tiles.add(ListTile(
       trailing:
-          IconButton(icon: Icon(Icons.keyboard_arrow_right, color: Colors.red)),
+          IconButton(icon: Icon(Icons.sentiment_very_satisfied, color: Colors.red)),
       title: const Text('Latest videos'),
       onTap: () => showSelectedCallback(staticLatestShow),
     ));
