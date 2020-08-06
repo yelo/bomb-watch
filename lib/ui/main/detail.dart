@@ -24,21 +24,52 @@ class DetailScreen extends StatelessWidget {
   _getBody(BuildContext context, AsyncSnapshot<GbVideos> snapshot) {
     if (snapshot.hasData) {
       return GridView.count(
+        primary: false,
+        childAspectRatio: 16 / 9,
         crossAxisCount: 1,
         padding: EdgeInsets.all(10),
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
         children: snapshot.data.results.map((video) {
-          return InkWell(
-            child: CachedNetworkImage(
-              fit: BoxFit.cover,
-              imageUrl: video.image.screenUrl,
-              progressIndicatorBuilder: (context, url, progress) => Center(
-                  child: CircularProgressIndicator(value: progress.progress)),
-              errorWidget: (context, url, error) => Icon(Icons.error),
-            ),
-            onTap: () => _navigateToVideo(context, video.guid),
-          );
+          return Container(
+              color: Colors.transparent,
+              child: InkWell(
+                child: Stack(
+                  children: [
+                    Container(
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: video.image.screenUrl,
+                        progressIndicatorBuilder: (context, url, progress) =>
+                            Center(
+                                child: CircularProgressIndicator(
+                                    value: progress.progress)),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      child: Container(
+                        color: Colors.black87,
+                        padding: EdgeInsets.all(5),
+                        child: Text(video.name,
+                            style: TextStyle(color: Colors.white)),
+                      ),
+                    ),
+                    Container(
+                        padding: EdgeInsets.all(10),
+                        child: Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              color: Colors.black87,
+                              child: Text(video.deck,
+                                  style: TextStyle(color: Colors.white)),
+                            )))
+                  ],
+                ),
+                onTap: () => _navigateToVideo(context, video.guid),
+              ));
         }).toList(),
       );
     } else if (snapshot.hasError) {

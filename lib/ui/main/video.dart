@@ -33,7 +33,7 @@ class _VideoScreenState extends State<VideoScreen> {
     futureVideo = _gbClient.fetchVideo(this.guid);
     futureVideo.then((video) {
       _videoControllerWrapper = VideoControllerWrapper(DataSource.network(
-          "${video.results.hdUrl}?api_key=${_gbClient.apiKey}",
+          "${video.results.hdUrl ?? video.results.highUrl}?api_key=${_gbClient.apiKey}",
           displayName: video.results.name));
 
       _videoControllerWrapper.addListener(() {
