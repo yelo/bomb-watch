@@ -22,14 +22,16 @@ class MasterScreen extends StatelessWidget {
   double _position = 0;
 
   void _scrollToggler() {
-    if (scrollController.hasClients)
+    if (scrollController.hasClients) {
       _currentPosition = scrollController.position.pixels;
-    scrollController
-        ?.animateTo(_position,
-            duration: Duration(seconds: 1), curve: Curves.fastOutSlowIn)
-        .then((_) {
-      _position = _currentPosition != 0 ? _currentPosition : 0;
-    });
+      if (_currentPosition != 0 && _position != 0) _position = 0;
+      scrollController
+          ?.animateTo(_position,
+          duration: Duration(seconds: 1), curve: Curves.fastOutSlowIn)
+          .then((_) {
+        _position = _currentPosition != 0 ? _currentPosition : 0;
+      });
+    }
   }
 
   @override
