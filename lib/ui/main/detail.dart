@@ -6,7 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends StatefulWidget {
   DetailScreen(
       {@required this.show,
       @required this.futureVideos,
@@ -16,20 +16,26 @@ class DetailScreen extends StatelessWidget {
   final Future<GbVideos> futureVideos;
   final ScrollController scrollController;
 
+  @override
+  _DetailScreenState createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
   double _currentPosition = 0;
+
   double _position = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(
-          appBar: AppBar(title: Text(show.title)),
+          appBar: AppBar(title: Text(widget.show.title)),
           onTap: () {
             _scrollToggler();
           },
         ),
         body: FutureBuilder<GbVideos>(
-            future: futureVideos,
+            future: widget.futureVideos,
             builder: (context, snapshot) {
               return _getBody(context, snapshot);
             }));
@@ -45,13 +51,13 @@ class DetailScreen extends StatelessWidget {
   }
 
   void _scrollToggler() {
-    if (scrollController.hasClients) {
-      _currentPosition = scrollController.position.pixels;
+    if (widget.scrollController.hasClients) {
+      _currentPosition = widget.scrollController.position.pixels;
       if (_currentPosition != 0 && _position != 0) _position = 0;
-      scrollController
+      widget.scrollController
           ?.animateTo(_position,
-          duration: Duration(seconds: 1), curve: Curves.fastOutSlowIn)
-          .then((_) {
+              duration: Duration(seconds: 1), curve: Curves.fastOutSlowIn)
+          ?.then((_) {
         _position = _currentPosition != 0 ? _currentPosition : 0;
       });
     }
@@ -61,7 +67,7 @@ class DetailScreen extends StatelessWidget {
     //
     if (snapshot.hasData) {
       return GridView.count(
-        controller: scrollController,
+        controller: widget.scrollController,
         primary: false,
         childAspectRatio: 16 / 9,
         crossAxisCount: _getCrossAxisCount(context),

@@ -3,7 +3,7 @@ import 'package:bomb_watch/utils/widgets/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class MasterScreen extends StatelessWidget {
+class MasterScreen extends StatefulWidget {
   MasterScreen({
     @required this.showSelectedCallback,
     @required this.toggleShowFavoriteCallback,
@@ -18,16 +18,21 @@ class MasterScreen extends StatelessWidget {
   final Show selectedShow;
   final List<Show> shows;
 
+  @override
+  _MasterScreenState createState() => _MasterScreenState();
+}
+
+class _MasterScreenState extends State<MasterScreen> {
   double _currentPosition = 0;
   double _position = 0;
 
   void _scrollToggler() {
-    if (scrollController.hasClients) {
-      _currentPosition = scrollController.position.pixels;
+    if (widget.scrollController.hasClients) {
+      _currentPosition = widget.scrollController.position.pixels;
       if (_currentPosition != 0 && _position != 0) _position = 0;
-      scrollController
-          ?.animateTo(_position,
-          duration: Duration(seconds: 1), curve: Curves.fastOutSlowIn)
+      widget.scrollController
+          .animateTo(_position,
+              duration: Duration(seconds: 1), curve: Curves.fastOutSlowIn)
           .then((_) {
         _position = _currentPosition != 0 ? _currentPosition : 0;
       });
@@ -55,7 +60,9 @@ class MasterScreen extends StatelessWidget {
           _scrollToggler();
         },
       ),
-      body: ListView(controller: scrollController, children: _getTiles(shows)),
+      body: ListView(
+          controller: widget.scrollController,
+          children: _getTiles(widget.shows)),
     );
   }
 
@@ -69,9 +76,11 @@ class MasterScreen extends StatelessWidget {
 
     tiles.add(ListTile(
       trailing: IconButton(
-          icon: Icon(Icons.sentiment_very_satisfied, color: Colors.red)),
+        icon: Icon(Icons.sentiment_very_satisfied, color: Colors.red),
+        onPressed: () {/* Do nothing */},
+      ),
       title: const Text('Latest videos'),
-      onTap: () => showSelectedCallback(staticLatestShow),
+      onTap: () => widget.showSelectedCallback(staticLatestShow),
     ));
 
     if (favs.length > 0) {
@@ -104,15 +113,15 @@ class MasterScreen extends StatelessWidget {
         trailing: IconButton(
             icon: Icon(show.favorite ? Icons.favorite : Icons.favorite_border,
                 color: Colors.red),
-            onPressed: () => toggleShowFavoriteCallback(show)),
-        onTap: () => showSelectedCallback(show),
-        selected: selectedShow?.id == show?.id);
+            onPressed: () => widget.toggleShowFavoriteCallback(show)),
+        onTap: () => widget.showSelectedCallback(show),
+        selected: widget.selectedShow?.id == show?.id);
   }
 
-  getHeadingItem(String title) {
+  ListTile getHeadingItem(String title) {
     return ListTile(
         enabled: false,
-        title: Text('${title}',
-            style: TextStyle(fontSize: 28, color: Colors.red)));
+        title:
+            Text('$title', style: TextStyle(fontSize: 28, color: Colors.red)));
   }
 }

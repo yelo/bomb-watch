@@ -7,8 +7,8 @@ import 'package:get_it/get_it.dart';
 import 'package:neeko/neeko.dart';
 
 class VideoScreen extends StatefulWidget {
-  String guid;
-  ImageProvider imageProvider;
+  final String guid;
+  final ImageProvider imageProvider;
 
   VideoScreen(this.guid, this.imageProvider);
 
@@ -68,7 +68,6 @@ class _VideoScreenState extends State<VideoScreen> {
 
   _getBody(AsyncSnapshot<GbVideo> snapshot) {
     if (snapshot.hasData) {
-      Video video = snapshot.data.results;
       return Center(
           child: AspectRatio(
               aspectRatio: 16 / 9,

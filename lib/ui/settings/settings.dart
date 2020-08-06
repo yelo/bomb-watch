@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 class SettingsScreen extends StatelessWidget {
-  SimplePersistentStorage _storage = GetIt.instance<SimplePersistentStorage>();
-  GbClient _client = GetIt.instance<GbClient>();
+  final SimplePersistentStorage _storage =
+      GetIt.instance<SimplePersistentStorage>();
+  final GbClient _client = GetIt.instance<GbClient>();
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings'),
@@ -22,8 +22,8 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  _clearApiKey(BuildContext context) async {
-    await _storage.clearApiToken();
+  _clearApiKey(BuildContext context) {
+    _storage.clearApiToken();
     _client.clearKey();
     Navigator.of(context)
         .pushNamedAndRemoveUntil('/auth', (Route<dynamic> route) => false);
