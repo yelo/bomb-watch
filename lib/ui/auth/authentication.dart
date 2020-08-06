@@ -2,7 +2,6 @@ import 'package:bomb_watch/services/gb_client.dart';
 import 'package:bomb_watch/services/simple_persistent_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 
@@ -18,14 +17,14 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
   void fetchAndSetApiKey(String regCode) async {
     _gbClient.fetchApiKey(regCode).then((token) async {
-        showToast(token.regToken != null).whenComplete(() {
-          if (token.regToken != null) {
-            _storage.saveApiKey(token.regToken);
-            _gbClient.setKey(token.regToken);
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                '/main', (Route<dynamic> route) => false);
-          }
-        });
+      showToast(token.regToken != null).whenComplete(() {
+        if (token.regToken != null) {
+          _storage.saveApiKey(token.regToken);
+          _gbClient.setKey(token.regToken);
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              '/main', (Route<dynamic> route) => false);
+        }
+      });
     });
   }
 

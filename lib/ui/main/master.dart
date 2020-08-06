@@ -44,7 +44,8 @@ class MasterScreen extends StatelessWidget {
     List<Widget> tiles = new List<Widget>();
 
     tiles.add(ListTile(
-      trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right, color:Colors.red)),
+      trailing:
+          IconButton(icon: Icon(Icons.keyboard_arrow_right, color: Colors.red)),
       title: const Text('Latest videos'),
       onTap: () => showSelectedCallback(staticLatestShow),
     ));
@@ -60,11 +61,10 @@ class MasterScreen extends StatelessWidget {
     }
 
     tiles.add(getHeadingItem('Shows'));
-    tiles.add(Divider(height: 5.0));
 
     rest.forEach((show) {
-      tiles.add(getListShowItem(show));
       tiles.add(Divider(height: 5.0));
+      tiles.add(getListShowItem(show));
     });
 
     return tiles;
@@ -73,6 +73,10 @@ class MasterScreen extends StatelessWidget {
   ListTile getListShowItem(Show show) {
     return ListTile(
         title: Text(show.title),
+        subtitle: Container(
+          padding: EdgeInsets.only(top: 3),
+          child: Text(show.deck, style: TextStyle(fontSize: 12)),
+        ),
         trailing: IconButton(
             icon: Icon(show.favorite ? Icons.favorite : Icons.favorite_border,
                 color: Colors.red),
@@ -82,6 +86,9 @@ class MasterScreen extends StatelessWidget {
   }
 
   getHeadingItem(String title) {
-    return ListTile(enabled: false, title: Text('${title}', style: TextStyle(fontSize: 28, color: Colors.red)));
+    return ListTile(
+        enabled: false,
+        title: Text('${title}',
+            style: TextStyle(fontSize: 28, color: Colors.red)));
   }
 }

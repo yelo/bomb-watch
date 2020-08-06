@@ -22,8 +22,10 @@ class SimplePersistentStorage {
   void toggleShowAsFavorite(int id) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var favorites = await getFavoriteShowIds();
-    if (!favorites.contains('${id}')) favorites.add('${id}');
-    else favorites.remove('${id}');
+    if (!favorites.contains('${id}'))
+      favorites.add('${id}');
+    else
+      favorites.remove('${id}');
     await preferences.setStringList(FAVORITE_SHOWS, favorites);
   }
 

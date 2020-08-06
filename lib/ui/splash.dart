@@ -1,7 +1,5 @@
 import 'package:bomb_watch/services/gb_client.dart';
 import 'package:bomb_watch/services/simple_persistent_storage.dart';
-import 'package:bomb_watch/ui/auth/authentication.dart';
-import 'package:bomb_watch/ui/main/container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -33,9 +31,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      )
-    );
+        body: Center(
+      child: CircularProgressIndicator(),
+    ));
   }
 }

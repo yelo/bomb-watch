@@ -42,7 +42,8 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return MasterScreen(
-                toggleShowFavoriteCallback: (show) => _toggleShowAsFavorite(show),
+                toggleShowFavoriteCallback: (show) =>
+                    _toggleShowAsFavorite(show),
                 showSelectedCallback: (show) {
                   Navigator.push(
                       context,
@@ -75,7 +76,8 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return MasterScreen(
-                      toggleShowFavoriteCallback: (show) => _toggleShowAsFavorite,
+                      toggleShowFavoriteCallback: (show) =>
+                          _toggleShowAsFavorite,
                       showSelectedCallback: (show) {
                         setState(() {
                           _selectedShow = show;
@@ -92,8 +94,9 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
         Flexible(
           flex: 3,
           child: DetailScreen(
-            show: _selectedShow ?? new Show(
-                deck: null, id: 0, title: 'Latest videos', image: null),
+            show: _selectedShow ??
+                new Show(
+                    deck: null, id: 0, title: 'Latest videos', image: null),
           ),
         ),
       ],
