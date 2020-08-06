@@ -1,4 +1,5 @@
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
+import 'package:bomb_watch/utils/widgets/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -6,32 +7,53 @@ class MasterScreen extends StatelessWidget {
   MasterScreen({
     @required this.showSelectedCallback,
     @required this.toggleShowFavoriteCallback,
+    @required this.scrollController,
     this.shows,
     this.selectedShow,
   });
 
+  final ScrollController scrollController;
   final ValueChanged<Show> showSelectedCallback;
   final ValueChanged<Show> toggleShowFavoriteCallback;
   final Show selectedShow;
   final List<Show> shows;
 
+  double _currentPosition = 0;
+  double _position = 0;
+
+  void _scrollToggler() {
+    if (scrollController.hasClients)
+      _currentPosition = scrollController.position.pixels;
+    scrollController
+        ?.animateTo(_position,
+            duration: Duration(seconds: 1), curve: Curves.fastOutSlowIn)
+        .then((_) {
+      _position = _currentPosition != 0 ? _currentPosition : 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Welcome to the Bomb Watch'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.settings,
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/settings');
-            },
-          )
-        ],
+      appBar: CustomAppBar(
+        appBar: AppBar(
+          title: Text('Welcome to the Bomb Watch'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.settings,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, '/settings');
+              },
+            )
+          ],
+        ),
+        onTap: () {
+          _scrollToggler();
+        },
       ),
-      body: ListView(children: _getTiles(shows)),
+      body: ListView(controller: scrollController, children: _getTiles(shows)),
     );
   }
 
@@ -44,8 +66,8 @@ class MasterScreen extends StatelessWidget {
     List<Widget> tiles = new List<Widget>();
 
     tiles.add(ListTile(
-      trailing:
-          IconButton(icon: Icon(Icons.sentiment_very_satisfied, color: Colors.red)),
+      trailing: IconButton(
+          icon: Icon(Icons.sentiment_very_satisfied, color: Colors.red)),
       title: const Text('Latest videos'),
       onTap: () => showSelectedCallback(staticLatestShow),
     ));

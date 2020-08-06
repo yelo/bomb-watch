@@ -20,9 +20,14 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
       GetIt.instance<SimplePersistentStorage>();
   Future<GbShows> futureShows;
 
+  ScrollController masterScrollController;
+  ScrollController detailScrollController;
+
   @override
   void initState() {
     super.initState();
+    masterScrollController = ScrollController();
+    detailScrollController = ScrollController();
     futureShows = gbClient.fetchShows();
     futureShows.then((shows) => {
           simpleStorage.getFavoriteShowIds().then((ids) => {
@@ -42,6 +47,7 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return MasterScreen(
+                scrollController: masterScrollController,
                 toggleShowFavoriteCallback: (show) =>
                     _toggleShowAsFavorite(show),
                 showSelectedCallback: (show) {
@@ -49,6 +55,7 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
                       context,
                       MaterialPageRoute(
                         builder: (_) => DetailScreen(
+                          scrollController: detailScrollController,
                           show: show,
                           futureVideos:
                               gbClient.fetchVideos(0, 10, show?.id ?? 0),
@@ -76,9 +83,13 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return MasterScreen(
+                      scrollController: masterScrollController,
                       toggleShowFavoriteCallback: (show) =>
-                          _toggleShowAsFavorite,
+                          _toggleShowAsFavorite(show),
                       showSelectedCallback: (show) {
+                        detailScrollController.animateTo(0,
+                            duration: Duration(seconds: 2),
+                            curve: Curves.fastOutSlowIn);
                         setState(() {
                           _selectedShow = show;
                         });
@@ -94,6 +105,8 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
         Flexible(
           flex: 3,
           child: DetailScreen(
+            scrollController: detailScrollController,
+            futureVideos: gbClient.fetchVideos(0, 10, _selectedShow?.id ?? 0),
             show: _selectedShow ??
                 new Show(
                     deck: null, id: 0, title: 'Latest videos', image: null),
@@ -118,8 +131,6 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
   _toggleShowAsFavorite(Show show) {
     simpleStorage.toggleShowAsFavorite(show.id);
     show.favorite = !show.favorite;
-    setState(() {
-      // just update state.
-    });
+    setState(() {});
   }
 }
