@@ -5,6 +5,8 @@ import 'package:bomb_watch/ui/main/container.dart';
 import 'package:bomb_watch/ui/main/video.dart';
 import 'package:bomb_watch/ui/settings/settings.dart';
 import 'package:bomb_watch/ui/splash.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -15,7 +17,7 @@ void setupDependencyInjection() {
   getIt.registerSingleton<SimplePersistentStorage>(SimplePersistentStorage());
 }
 
-void main() {
+Future<void> main() async {
   setupDependencyInjection();
   runApp(MyApp());
 }
@@ -23,7 +25,11 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
     return MaterialApp(
+      navigatorObservers: [
+        FirebaseAnalyticsObserver(analytics: analytics),
+      ],
       title: 'Bomb Watch',
       theme: ThemeData(primarySwatch: Colors.red),
       initialRoute: '/',
