@@ -52,7 +52,7 @@ class DetailScreen extends StatelessWidget {
                       child: Container(
                         color: Colors.black87,
                         padding: EdgeInsets.all(5),
-                        child: Text(video.name,
+                        child: Text("${video.name}${video.premium ? ' (Premium)' : ''}",
                             style: TextStyle(color: Colors.white)),
                       ),
                     ),
