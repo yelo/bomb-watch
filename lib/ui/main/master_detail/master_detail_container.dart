@@ -74,6 +74,7 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
   }
 
   Widget _buildTabletLayout() {
+    var portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return Row(
       children: <Widget>[
         Flexible(
@@ -103,7 +104,7 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
                   return CircularProgressIndicator();
                 })),
         Flexible(
-          flex: 3,
+          flex: portrait ? 1 : 2,
           child: DetailScreen(
             scrollController: detailScrollController,
             futureVideos: gbClient.fetchVideos(0, 10, _selectedShow?.id ?? 0),

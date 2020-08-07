@@ -75,10 +75,7 @@ class _MasterScreenState extends State<MasterScreen> {
     List<Widget> tiles = new List<Widget>();
 
     tiles.add(ListTile(
-      trailing: IconButton(
-        icon: Icon(Icons.sentiment_very_satisfied, color: Colors.red),
-        onPressed: () {/* Do nothing */},
-      ),
+      trailing: Icon(Icons.sentiment_very_satisfied, color: Colors.red),
       title: const Text('Latest Videos'),
       onTap: () => widget.showSelectedCallback(staticLatestShow),
     ));
@@ -109,10 +106,10 @@ class _MasterScreenState extends State<MasterScreen> {
           padding: EdgeInsets.only(top: 3),
           child: Text(show.deck, style: TextStyle(fontSize: 12)),
         ),
-        trailing: IconButton(
-            icon: Icon(show.favorite ? Icons.favorite : Icons.favorite_border,
+        trailing: GestureDetector(
+            child: Icon(show.favorite ? Icons.favorite : Icons.favorite_border,
                 color: Colors.red),
-            onPressed: () => widget.toggleShowFavoriteCallback(show)),
+            onTap: () => widget.toggleShowFavoriteCallback(show)),
         onTap: () => widget.showSelectedCallback(show),
         selected: widget.selectedShow?.id == show?.id);
   }

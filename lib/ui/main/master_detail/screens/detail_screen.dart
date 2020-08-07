@@ -43,12 +43,8 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   int _getCrossAxisCount(BuildContext context) {
-    var orientation = MediaQuery.of(context).orientation;
-    var shortestSide = MediaQuery.of(context).size.shortestSide;
-    var useMobileLayout = shortestSide < 600;
-
-    if (useMobileLayout) return orientation == Orientation.portrait ? 1 : 2;
-    return 2;
+    var portrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    return portrait ? 1 : 2;
   }
 
   void _scrollToggler() {

@@ -8,6 +8,7 @@ import 'package:bomb_watch/ui/settings/settings_screen.dart';
 import 'package:bomb_watch/ui/splash.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -33,7 +34,10 @@ class MyApp extends StatelessWidget {
       ],
       title: 'Bomb Watch',
       themeMode: ThemeMode.system,
-      theme: ThemeData(primarySwatch: Colors.red, brightness: Brightness.light),
+      theme: ThemeData(
+        primarySwatch: Colors.red,
+        brightness: Brightness.light,
+      ),
       darkTheme: ThemeData(
           primarySwatch: Colors.red,
           accentColor: Colors.redAccent,
