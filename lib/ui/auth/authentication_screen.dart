@@ -72,7 +72,13 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(child: Text("💣 BombWatch 📺", style: TextStyle(fontSize: 32, letterSpacing: 3, color: Colors.red, fontWeight: FontWeight.bold))),
+                    Center(
+                        child: Text("💣 BombWatch 📺",
+                            style: TextStyle(
+                                fontSize: 28,
+                                letterSpacing: 3,
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold))),
                     authInfoSection(),
                     authInputSection(),
                   ],
@@ -99,23 +105,32 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         text: new TextSpan(
           children: [
             new TextSpan(
-              text: '''Before you can start to use this app, you have to sync your account. Start by tapping on this ''',
+              text:
+                  '''Before you can start to use this app, you have to sync your account. Start by tapping on this ''',
               style: new TextStyle(color: Colors.black, fontSize: 16),
             ),
             new TextSpan(
                 text: 'HYPERLINK',
-                style: new TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.2),
-                recognizer: _tapGestureRecognizer
-            ), new TextSpan(
+                style: new TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    letterSpacing: 1.2),
+                recognizer: _tapGestureRecognizer),
+            new TextSpan(
               text: ", it will take you to the",
               style: new TextStyle(color: Colors.black, fontSize: 16),
             ),
             new TextSpan(
               text: " \"Sync with Bombwatch\" ",
-              style: new TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+              style: new TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
             ),
             new TextSpan(
-              text: "page where you will see a code. You have to put down that code in the textfield just here below. After you've done that and cliked next, you should be ready to rock!",
+              text:
+                  "page where you will see a code. You have to put down that code in the textfield just here below. After you've done that and cliked next, you should be ready to rock!",
               style: new TextStyle(color: Colors.black, fontSize: 16),
             ),
           ],
