@@ -51,10 +51,6 @@ class _SpecificVideoScreenState extends State<SpecificVideoScreen> {
         future: futureVideo,
         builder: (context, snapshot) {
           return Scaffold(
-            appBar: AppBar(
-                title: Text(snapshot.hasData
-                    ? snapshot.data.results.name
-                    : 'Loading...')),
             body: Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
@@ -67,30 +63,27 @@ class _SpecificVideoScreenState extends State<SpecificVideoScreen> {
   }
 
   _getBody(AsyncSnapshot<GbVideo> snapshot) {
-    if (snapshot.hasData) {
-      return Center(
-          child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: Stack(children: [
-                    Center(child: CircularProgressIndicator()),
-                    NeekoPlayerWidget(
-                      videoControllerWrapper: _videoControllerWrapper,
-                      playerOptions: NeekoPlayerOptions(autoPlay: false),
-                    ),
-                  ]))));
-    } else if (snapshot.hasError) {
+    if (snapshot.hasError) {
       return Text("${snapshot.error}");
     }
 
-    return Container(
-        child: AspectRatio(
-            aspectRatio: 16 / 9,
-            child: Container(
-                padding: EdgeInsets.all(10),
-                child: Stack(children: [
-                  Center(child: CircularProgressIndicator()),
-                ]))));
+    return AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Container(
+            padding: EdgeInsets.all(10),
+            child: Stack(children: _getVideoPlayerStack(snapshot.hasData))));
+  }
+
+  List<Widget> _getVideoPlayerStack(bool hasData) {
+    var widgets = new List<Widget>();
+    widgets.add(Center(child: CircularProgressIndicator()));
+    if (hasData)
+      widgets.add(Center(
+        child: NeekoPlayerWidget(
+          videoControllerWrapper: _videoControllerWrapper,
+          playerOptions: NeekoPlayerOptions(autoPlay: false),
+        ),
+      ));
+    return widgets;
   }
 }

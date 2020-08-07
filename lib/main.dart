@@ -32,7 +32,12 @@ class MyApp extends StatelessWidget {
         FirebaseAnalyticsObserver(analytics: analytics),
       ],
       title: 'Bomb Watch',
-      theme: ThemeData(primarySwatch: Colors.red),
+      themeMode: ThemeMode.system,
+      theme: ThemeData(primarySwatch: Colors.red, brightness: Brightness.light),
+      darkTheme: ThemeData(
+          primarySwatch: Colors.red,
+          accentColor: Colors.redAccent,
+          brightness: Brightness.dark),
       initialRoute: '/',
       onGenerateRoute: (settings) {
         // TODO: Check route name, setup better argument handling.

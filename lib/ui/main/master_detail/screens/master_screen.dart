@@ -71,7 +71,7 @@ class _MasterScreenState extends State<MasterScreen> {
     var rest = shows.where((show) => !show.favorite);
 
     Show staticLatestShow =
-        new Show(deck: '', id: 0, title: 'Latest videos', image: null);
+        new Show(deck: '', id: 0, title: 'Latest Videos', image: null);
     List<Widget> tiles = new List<Widget>();
 
     tiles.add(ListTile(
@@ -79,14 +79,13 @@ class _MasterScreenState extends State<MasterScreen> {
         icon: Icon(Icons.sentiment_very_satisfied, color: Colors.red),
         onPressed: () {/* Do nothing */},
       ),
-      title: const Text('Latest videos'),
+      title: const Text('Latest Videos'),
       onTap: () => widget.showSelectedCallback(staticLatestShow),
     ));
 
     if (favs.length > 0) {
       tiles.add(Divider(height: 5.0));
       tiles.add(getHeadingItem('Favorites'));
-      tiles.add(Divider(height: 5.0));
       favs.forEach((show) {
         tiles.add(getListShowItem(show));
         tiles.add(Divider(height: 5.0));
@@ -96,8 +95,8 @@ class _MasterScreenState extends State<MasterScreen> {
     tiles.add(getHeadingItem('Shows'));
 
     rest.forEach((show) {
-      tiles.add(Divider(height: 5.0));
       tiles.add(getListShowItem(show));
+      tiles.add(Divider(height: 5.0));
     });
 
     return tiles;
