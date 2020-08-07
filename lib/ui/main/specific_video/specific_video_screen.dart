@@ -6,18 +6,18 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:neeko/neeko.dart';
 
-class VideoScreen extends StatefulWidget {
+class SpecificVideoScreen extends StatefulWidget {
   final String guid;
   final ImageProvider imageProvider;
 
-  VideoScreen(this.guid, this.imageProvider);
+  SpecificVideoScreen(this.guid, this.imageProvider);
 
   @override
   State<StatefulWidget> createState() =>
-      _VideoScreenState(this.guid, this.imageProvider);
+      _SpecificVideoScreenState(this.guid, this.imageProvider);
 }
 
-class _VideoScreenState extends State<VideoScreen> {
+class _SpecificVideoScreenState extends State<SpecificVideoScreen> {
   final String guid;
   final ImageProvider imageProvider;
 
@@ -25,7 +25,7 @@ class _VideoScreenState extends State<VideoScreen> {
   Future<GbVideo> futureVideo;
   VideoControllerWrapper _videoControllerWrapper;
 
-  _VideoScreenState(this.guid, this.imageProvider);
+  _SpecificVideoScreenState(this.guid, this.imageProvider);
 
   @override
   void initState() {

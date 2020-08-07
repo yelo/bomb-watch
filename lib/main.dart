@@ -1,9 +1,10 @@
 import 'package:bomb_watch/services/gb_client.dart';
 import 'package:bomb_watch/services/simple_persistent_storage.dart';
-import 'package:bomb_watch/ui/auth/authentication.dart';
-import 'package:bomb_watch/ui/main/container.dart';
-import 'package:bomb_watch/ui/main/video.dart';
-import 'package:bomb_watch/ui/settings/settings.dart';
+import 'package:bomb_watch/ui/auth/authentication_screen.dart';
+import 'package:bomb_watch/ui/main/master_detail/master_detail_container.dart';
+import 'package:bomb_watch/ui/main/specific_video/specific_video_args.dart';
+import 'package:bomb_watch/ui/main/specific_video/specific_video_screen.dart';
+import 'package:bomb_watch/ui/settings/settings_screen.dart';
 import 'package:bomb_watch/ui/splash.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -34,24 +35,20 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.red),
       initialRoute: '/',
       onGenerateRoute: (settings) {
-        final VideoArgs videoArgs = settings.arguments;
+        // TODO: Check route name, setup better argument handling.
+        final SpecificVideoScreenArgs videoArgs = settings.arguments;
+
         var routes = <String, WidgetBuilder>{
           '/': (context) => SplashScreen(),
           '/auth': (context) => AuthenticationScreen(),
           '/main': (context) => MasterDetailContainer(),
           '/settings': (context) => SettingsScreen(),
-          '/video': (context) => VideoScreen(videoArgs.guid, videoArgs.imageProvider),
+          '/video': (context) =>
+              SpecificVideoScreen(videoArgs.guid, videoArgs.imageProvider),
         };
         WidgetBuilder builder = routes[settings.name];
         return MaterialPageRoute(builder: (context) => builder(context));
       },
     );
   }
-}
-
-class VideoArgs {
-  String guid;
-  ImageProvider imageProvider;
-
-  VideoArgs(this.guid, this.imageProvider);
 }

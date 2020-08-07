@@ -1,6 +1,6 @@
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
 import 'package:bomb_watch/data/api_responses/gb_videos.dart';
-import 'package:bomb_watch/main.dart';
+import 'package:bomb_watch/ui/main/specific_video/specific_video_args.dart';
 import 'package:bomb_watch/utils/widgets/custom_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -136,6 +136,6 @@ class _DetailScreenState extends State<DetailScreen> {
         });*/
 
     Navigator.pushNamed(context, '/video',
-        arguments: VideoArgs(guid, imageProvider));
+        arguments: SpecificVideoScreenArgs(guid, imageProvider));
   }
 }
