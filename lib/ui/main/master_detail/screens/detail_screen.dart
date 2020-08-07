@@ -128,12 +128,15 @@ class _DetailScreenState extends State<DetailScreen> {
 
   _navigateToVideo(BuildContext context, String guid, String imageUrl) {
     final ImageProvider imageProvider = CachedNetworkImageProvider(imageUrl);
+    var height = MediaQuery.of(context).orientation == Orientation.portrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height;
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
         builder: (ctx) {
           return Container(
-            height: MediaQuery.of(context).size.height,
+            height: height,
             child: SpecificVideoScreen(guid, imageProvider),
           );
         });
