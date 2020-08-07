@@ -1,6 +1,5 @@
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
 import 'package:bomb_watch/data/api_responses/gb_videos.dart';
-import 'package:bomb_watch/ui/main/specific_video/specific_video_args.dart';
 import 'package:bomb_watch/ui/main/specific_video/specific_video_screen.dart';
 import 'package:bomb_watch/utils/widgets/custom_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -72,47 +71,52 @@ class _DetailScreenState extends State<DetailScreen> {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
         children: snapshot.data.results.map((video) {
-          return Container(
-              color: Colors.transparent,
-              child: InkWell(
-                child: Stack(
+          return InkWell(
+            child: Stack(
+              children: [
+                Flex(
+                  direction: Axis.horizontal,
                   children: [
-                    Container(
+                    Expanded(
                       child: CachedNetworkImage(
-                        fit: BoxFit.fill,
-                        imageUrl: video.image.screenUrl,
+                        fit: BoxFit.cover,
+                        imageUrl: video.image.screenLargeUrl,
                         progressIndicatorBuilder: (context, url, progress) =>
                             Center(
                                 child: CircularProgressIndicator(
                                     value: progress.progress)),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        errorWidget: (context, url, error) =>
+                            Center(child: Icon(Icons.error_outline)),
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Container(
-                        color: Colors.black87,
-                        padding: EdgeInsets.all(5),
-                        child: Text(
-                            "${video.name}${video.premium ? ' - Premium!' : ''}",
-                            style: TextStyle(color: Colors.white)),
-                      ),
-                    ),
-                    Container(
-                        padding: EdgeInsets.all(10),
-                        child: Align(
-                            alignment: Alignment.bottomLeft,
-                            child: Container(
-                              padding: EdgeInsets.all(5),
-                              color: Colors.black87,
-                              child: Text(video.deck,
-                                  style: TextStyle(color: Colors.white)),
-                            )))
                   ],
+                  // fit: BoxFit.fill,
                 ),
-                onTap: () => _navigateToVideo(
-                    context, video.guid, video.image.screenUrl),
-              ));
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Container(
+                    color: Colors.black87,
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                        "${video.name}${video.premium ? ' - Premium!' : ''}",
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                ),
+                Container(
+                    padding: EdgeInsets.all(10),
+                    child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Container(
+                          padding: EdgeInsets.all(5),
+                          color: Colors.black87,
+                          child: Text(video.deck,
+                              style: TextStyle(color: Colors.white)),
+                        )))
+              ],
+            ),
+            onTap: () => _navigateToVideo(
+                context, video.guid, video.image.screenLargeUrl),
+          );
         }).toList(),
       );
     } else if (snapshot.hasError) {
