@@ -1,8 +1,8 @@
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
 import 'package:bomb_watch/services/gb_client.dart';
 import 'package:bomb_watch/services/simple_persistent_storage.dart';
-import 'package:bomb_watch/ui/main/master_detail/screens/detail_screen.dart';
-import 'package:bomb_watch/ui/main/master_detail/screens/master_screen.dart';
+import 'package:bomb_watch/screens/main/master_detail/screens/detail_screen.dart';
+import 'package:bomb_watch/screens/main/master_detail/screens/master_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';

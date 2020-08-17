@@ -5,7 +5,7 @@ import 'package:bomb_watch/screens/main/master_detail/master_detail_container.da
 import 'package:bomb_watch/screens/main/specific_video/specific_video_args.dart';
 import 'package:bomb_watch/screens/main/specific_video/specific_video_screen.dart';
 import 'package:bomb_watch/screens/settings/settings_screen.dart';
-import 'package:bomb_watch/screens/splash.dart';
+import 'package:bomb_watch/screens/splash_screen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/cupertino.dart';
