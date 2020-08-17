@@ -1,6 +1,9 @@
-# bomb_watch
+# Bomb Watch
 
 BombWatch - Watch GiantBomb
+
+## Disclaimer
+I'm using this project as a way to learn development with Flutter.
 
 ## Getting Started
 
