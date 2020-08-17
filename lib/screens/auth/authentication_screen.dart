@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bomb_watch/services/gb_client.dart';
 import 'package:bomb_watch/services/simple_persistent_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class AuthenticationScreen extends StatefulWidget {
   @override
@@ -17,6 +20,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   TextEditingController _controller;
   GbClient _gbClient = GetIt.instance<GbClient>();
   SimplePersistentStorage _storage = GetIt.instance<SimplePersistentStorage>();
+
+  final Completer<WebViewController> _webViewController =
+      Completer<WebViewController>();
 
   void fetchAndSetApiKey(String regCode) async {
     _gbClient.fetchApiKey(regCode).then((token) async {
@@ -64,29 +70,34 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         appBar: AppBar(
           title: Text('Sync your account'),
         ),
-        body: Container(
-          padding: const EdgeInsets.all(32),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                        child: Text("💣 BombWatch 📺",
-                            style: TextStyle(
-                                fontSize: 28,
-                                letterSpacing: 3,
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold))),
-                    authInfoSection(),
-                    authInputSection(),
-                  ],
-                ),
+        body: Builder(builder: (context) {
+          return SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.all(32),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                            child: Text("💣 BombWatch 📺",
+                                style: TextStyle(
+                                    fontSize: 28,
+                                    letterSpacing: 3,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold))),
+                        authInfoSection(),
+                        // TODO: Fix the auth flow. Information -> webview -> auth. getWebView(),
+                        authInputSection(),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ));
+            ),
+          );
+        }));
   }
 
   Container authInputSection() {
@@ -96,6 +107,18 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
       controller: _controller,
       onSubmitted: fetchAndSetApiKey,
     ));
+  }
+
+  Widget getWebView() {
+    return FittedBox(
+      fit: BoxFit.cover,
+      child: WebView(
+          initialUrl: 'https://www.giantbomb.com/app/bombwatch/',
+          javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: (WebViewController webViewController) {
+            _webViewController.complete(webViewController);
+          }),
+    );
   }
 
   Widget authInfoSection() {

@@ -1,11 +1,11 @@
 import 'package:bomb_watch/services/gb_client.dart';
 import 'package:bomb_watch/services/simple_persistent_storage.dart';
-import 'package:bomb_watch/ui/auth/authentication_screen.dart';
-import 'package:bomb_watch/ui/main/master_detail/master_detail_container.dart';
-import 'package:bomb_watch/ui/main/specific_video/specific_video_args.dart';
-import 'package:bomb_watch/ui/main/specific_video/specific_video_screen.dart';
-import 'package:bomb_watch/ui/settings/settings_screen.dart';
-import 'package:bomb_watch/ui/splash.dart';
+import 'package:bomb_watch/screens/auth/authentication_screen.dart';
+import 'package:bomb_watch/screens/main/master_detail/master_detail_container.dart';
+import 'package:bomb_watch/screens/main/specific_video/specific_video_args.dart';
+import 'package:bomb_watch/screens/main/specific_video/specific_video_screen.dart';
+import 'package:bomb_watch/screens/settings/settings_screen.dart';
+import 'package:bomb_watch/screens/splash.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/cupertino.dart';
