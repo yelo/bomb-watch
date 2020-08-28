@@ -81,18 +81,9 @@ class _MasterScreenState extends State<MasterScreen> {
         title:
             Text('Hello!', style: TextStyle(fontSize: 28, color: Colors.red))));
 
-    tiles.add(ListTile(
-      trailing: Icon(Icons.sentiment_very_satisfied, color: Colors.red),
-      title: const Text('Latest Videos'),
-      subtitle: Container(
-        padding: EdgeInsets.only(top: 3),
-        child: Text('Check out the latest and greatest',
-            style: TextStyle(fontSize: 12)),
-      ),
-      onTap: () => widget.showSelectedCallback(staticLatestShow),
-    ));
+    tiles.add(_getLatestWidget(staticLatestShow));
 
-    tiles.add(getLiveWidget());
+    tiles.add(_getLiveWidget());
 
     if (favs.length > 0) {
       tiles.add(Divider(height: 5.0));
@@ -111,6 +102,19 @@ class _MasterScreenState extends State<MasterScreen> {
     });
 
     return tiles;
+  }
+
+  ListTile _getLatestWidget(Show staticLatestShow) {
+    return ListTile(
+      trailing: Icon(Icons.sentiment_very_satisfied, color: Colors.red),
+      title: const Text('Latest Videos'),
+      subtitle: Container(
+        padding: EdgeInsets.only(top: 3),
+        child: Text('Check out the latest and greatest',
+            style: TextStyle(fontSize: 12)),
+      ),
+      onTap: () => widget.showSelectedCallback(staticLatestShow),
+    );
   }
 
   ListTile getListShowItem(Show show) {
@@ -135,7 +139,7 @@ class _MasterScreenState extends State<MasterScreen> {
             Text('$title', style: TextStyle(fontSize: 28, color: Colors.red)));
   }
 
-  Widget getLiveWidget() {
+  Widget _getLiveWidget() {
     return FutureBuilder<GbLive>(
         future: widget.live,
         builder: (context, snapshot) {
