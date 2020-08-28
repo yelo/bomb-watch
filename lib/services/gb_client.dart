@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bomb_watch/data/api_responses/gb_access_token.dart';
+import 'package:bomb_watch/data/api_responses/gb_live.dart';
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
 import 'package:bomb_watch/data/api_responses/gb_video.dart';
 import 'package:bomb_watch/data/api_responses/gb_videos.dart';
@@ -16,8 +17,6 @@ class GbClient {
   void clearKey() {
     this.apiKey = null;
   }
-
-  // TODO: Fetch live. Doesn't seem to work at the moment.
 
   Future<GbAccessToken> fetchApiKey(String regCode) async {
     final response = await http.get(
@@ -40,7 +39,6 @@ class GbClient {
   }
 
   Future<GbVideos> fetchVideos(int offset, int limit, int showId) async {
-    // var url = 'https://www.giantbomb.com/api/videos/?api_key=${this.apiKey}&offset=${offset}&sort=publish_date%3Adesc&field_list=saved_time,name,deck,hd_url,high_url,low_url,guid,publish_date,image,user,length_seconds,url&format=JSON&limit=${limit}';
     var url =
         'https://www.giantbomb.com/api/videos/?api_key=${this.apiKey}&sort=publish_date%3Adesc&field_list=saved_time,name,deck,hd_url,high_url,low_url,guid,publish_date,image,user,length_seconds,url,premium&format=JSON';
     if (showId != 0) url = '$url&filter=video_show:$showId';
@@ -59,6 +57,16 @@ class GbClient {
       return GbVideo.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to fetch specific video with guid: $guid');
+    }
+  }
+
+  Future<GbLive> fetchLive() async {
+    final response = await http.get(
+        'https://www.giantbomb.com/api/video/current-live/?api_key=${this.apiKey}');
+    if (response.statusCode == 200) {
+      return GbLive.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to fetch live video information');
     }
   }
 }

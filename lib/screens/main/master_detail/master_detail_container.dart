@@ -1,3 +1,4 @@
+import 'package:bomb_watch/data/api_responses/gb_live.dart';
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
 import 'package:bomb_watch/services/gb_client.dart';
 import 'package:bomb_watch/services/simple_persistent_storage.dart';
@@ -19,6 +20,7 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
   SimplePersistentStorage simpleStorage =
       GetIt.instance<SimplePersistentStorage>();
   Future<GbShows> futureShows;
+  Future<GbLive> gbLive;
 
   ScrollController masterScrollController;
   ScrollController detailScrollController;
@@ -28,6 +30,9 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
     super.initState();
     masterScrollController = ScrollController();
     detailScrollController = ScrollController();
+
+    gbLive = gbClient.fetchLive();
+
     futureShows = gbClient.fetchShows();
     futureShows.then((shows) => {
           simpleStorage.getFavoriteShowIds().then((ids) => {
@@ -62,6 +67,7 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
                         ),
                       ));
                 },
+                live: gbLive,
                 shows: snapshot.data.results);
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
@@ -95,6 +101,7 @@ class _MasterDetailContainerState extends State<MasterDetailContainer> {
                           _selectedShow = show;
                         });
                       },
+                      live: gbLive,
                       shows: snapshot.data.results,
                     );
                   } else if (snapshot.hasError) {

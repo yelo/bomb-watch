@@ -1,22 +1,24 @@
+import 'package:bomb_watch/data/api_responses/gb_live.dart';
 import 'package:bomb_watch/data/api_responses/gb_shows.dart';
 import 'package:bomb_watch/utils/widgets/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MasterScreen extends StatefulWidget {
-  MasterScreen({
-    @required this.showSelectedCallback,
-    @required this.toggleShowFavoriteCallback,
-    @required this.scrollController,
-    this.shows,
-    this.selectedShow,
-  });
+  MasterScreen(
+      {@required this.showSelectedCallback,
+      @required this.toggleShowFavoriteCallback,
+      @required this.scrollController,
+      this.shows,
+      this.selectedShow,
+      this.live});
 
   final ScrollController scrollController;
   final ValueChanged<Show> showSelectedCallback;
   final ValueChanged<Show> toggleShowFavoriteCallback;
   final Show selectedShow;
   final List<Show> shows;
+  final Future<GbLive> live;
 
   @override
   _MasterScreenState createState() => _MasterScreenState();
@@ -75,10 +77,22 @@ class _MasterScreenState extends State<MasterScreen> {
     List<Widget> tiles = new List<Widget>();
 
     tiles.add(ListTile(
+        enabled: false,
+        title:
+            Text('Hello!', style: TextStyle(fontSize: 28, color: Colors.red))));
+
+    tiles.add(ListTile(
       trailing: Icon(Icons.sentiment_very_satisfied, color: Colors.red),
       title: const Text('Latest Videos'),
+      subtitle: Container(
+        padding: EdgeInsets.only(top: 3),
+        child: Text('Check out the latest and greatest',
+            style: TextStyle(fontSize: 12)),
+      ),
       onTap: () => widget.showSelectedCallback(staticLatestShow),
     ));
+
+    tiles.add(getLiveWidget());
 
     if (favs.length > 0) {
       tiles.add(Divider(height: 5.0));
@@ -119,5 +133,33 @@ class _MasterScreenState extends State<MasterScreen> {
         enabled: false,
         title:
             Text('$title', style: TextStyle(fontSize: 28, color: Colors.red)));
+  }
+
+  Widget getLiveWidget() {
+    return FutureBuilder<GbLive>(
+        future: widget.live,
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data.video != null) {
+            var video = snapshot.data.video;
+            return Container(
+              child: Column(
+                children: [
+                  Divider(height: 5.0),
+                  ListTile(
+                      autofocus: true,
+                      subtitle: Container(
+                        padding: EdgeInsets.only(top: 3),
+                        child:
+                            Text(video.title, style: TextStyle(fontSize: 12)),
+                      ),
+                      title: Text('Currently live!'),
+                      trailing: GestureDetector(
+                          child: Icon(Icons.live_tv, color: Colors.red))),
+                ],
+              ),
+            );
+          }
+          return null;
+        });
   }
 }
