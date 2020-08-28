@@ -139,7 +139,7 @@ class _MasterScreenState extends State<MasterScreen> {
     return FutureBuilder<GbLive>(
         future: widget.live,
         builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data.video != null) {
+          if (snapshot.hasData && snapshot.data.success == 1) {
             var video = snapshot.data.video;
             return Container(
               child: Column(
